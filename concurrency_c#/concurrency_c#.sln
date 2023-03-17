@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33424.131
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementos de la solución", "Elementos de la solución", "{92DFA611-AA8F-4DE3-8CC5-CFF72D64A834}"
+	ProjectSection(SolutionItems) = preProject
+		Readme.md = Readme.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Programacion_Asincrona", "Programacion_Asincrona", "{D78C7687-BE4D-4E43-9024-A12EF70A02C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinForms", "Programacion_Asincrona\WinForms\WinForms.csproj", "{9A9FB218-4A05-4C79-B17F-97C9B466110A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "Programacion_Asincrona\WebApi\WebApi.csproj", "{9835B01B-1A37-4AAF-80C7-25E4A01BE22E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9A9FB218-4A05-4C79-B17F-97C9B466110A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A9FB218-4A05-4C79-B17F-97C9B466110A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A9FB218-4A05-4C79-B17F-97C9B466110A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A9FB218-4A05-4C79-B17F-97C9B466110A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9835B01B-1A37-4AAF-80C7-25E4A01BE22E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9835B01B-1A37-4AAF-80C7-25E4A01BE22E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9835B01B-1A37-4AAF-80C7-25E4A01BE22E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9835B01B-1A37-4AAF-80C7-25E4A01BE22E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9A9FB218-4A05-4C79-B17F-97C9B466110A} = {D78C7687-BE4D-4E43-9024-A12EF70A02C6}
+		{9835B01B-1A37-4AAF-80C7-25E4A01BE22E} = {D78C7687-BE4D-4E43-9024-A12EF70A02C6}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C02582F2-70FD-4F3B-8D01-335B6CC75029}
+	EndGlobalSection
+EndGlobal
