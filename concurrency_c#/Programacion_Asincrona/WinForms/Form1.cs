@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WinForms.Models;
 
 namespace WinForms
 {
@@ -28,8 +29,11 @@ namespace WinForms
         private async void Iniciar_Click(object sender, EventArgs e)
         {
             loadingGif.Visible = true;
+            pgProcesamiento.Visible = true;
 
-            var tarjetas = await ObtenerTarjetasDeCredito(25000);
+            var reportarProgreso = new Progress<int>(ReportarProgresoTarjetas);
+
+            var tarjetas = await ObtenerTarjetasDeCredito(10);
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
@@ -37,7 +41,7 @@ namespace WinForms
             //var nombre = txtInput.Text;
             try
             {
-                await ProcesarTarjetas(tarjetas);
+                await ProcesarTarjetas(tarjetas, reportarProgreso);
                 //var saludo = await ObtenerSaludo(nombre);
                 //MessageBox.Show(saludo);
             }
@@ -49,23 +53,81 @@ namespace WinForms
             MessageBox.Show($"Operacion finalizada en {stopwatch.ElapsedMilliseconds / 1000.0} segundos.");
 
             loadingGif.Visible = false;
+            pgProcesamiento.Visible = false;
         }
 
-        private async Task ProcesarTarjetas(List<string> tarjetas)
+        private void ReportarProgresoTarjetas(int porcentaje)
         {
-            var tareas = new List<Task>();
+            pgProcesamiento.Value = porcentaje;
+        }
+
+        private async Task ProcesarTarjetas(List<string> tarjetas, IProgress<int> progress = null)
+        {
+            var semaforo = new SemaphoreSlim(5);
+
+            var tareas = new List<Task<HttpResponseMessage>>();
+
+            var indice = 0;
+
+            tareas = tarjetas.Select(async tarjeta =>
+            {
+                var json = JsonConvert.SerializeObject(tarjeta);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                await semaforo.WaitAsync();
+                try
+                {
+                    var tareaInterna =  await _httpClient.PostAsync($"{_apiURL}api/tarjeta", content);
+
+                    if (progress != null)
+                    {
+                        indice++;
+                        var porcentaje = (double)indice / tarjetas.Count;
+                        porcentaje = porcentaje * 100;
+                        var porcentajeInt = (int)Math.Round(porcentaje, 0);
+                        progress.Report(porcentajeInt);
+                    }
+
+                    return tareaInterna;
+                }
+                finally
+                {
+                    semaforo.Release();
+                }
+            }).ToList();
+
+            var respuestas = await Task.WhenAll(tareas);
+
+            var tarjetasRechazadas = new List<string>();
+
+            foreach (var respuesta in respuestas)
+            {
+                var contenido = await respuesta.Content.ReadAsStringAsync();
+                var respuestaTarjeta = JsonConvert.DeserializeObject<RespuestaTarjeta>(contenido);
+
+                if (!respuestaTarjeta.Aprobada)
+                {
+                    tarjetasRechazadas.Add(respuestaTarjeta.Tarjeta);
+                }
+            }
+
+            foreach(var tarjeta in tarjetasRechazadas)
+            {
+                Console.WriteLine(tarjeta);
+            }
 
             //Creando nuestra propia tarea
-            await Task.Run(() =>
-            {
-                foreach (var tarjeta in tarjetas)
-                {
-                    var json = JsonConvert.SerializeObject(tarjeta);
-                    var content = new StringContent(json, Encoding.UTF8, "application/json");
-                    var respuestaTask = _httpClient.PostAsync($"{_apiURL}api/tarjeta", content);
-                    tareas.Add(respuestaTask);
-                }
-            });
+
+            //var tareas = new List<Task>();
+            //await Task.Run(() =>
+            //{
+            //    foreach (var tarjeta in tarjetas)
+            //    {
+            //        var json = JsonConvert.SerializeObject(tarjeta);
+            //        var content = new StringContent(json, Encoding.UTF8, "application/json");
+            //        var respuestaTask = _httpClient.PostAsync($"{_apiURL}api/tarjeta", content);
+            //        tareas.Add(respuestaTask);
+            //    }
+            //});
 
             await Task.WhenAll(tareas);
         }
@@ -103,6 +165,16 @@ namespace WinForms
                 var saludo = await respuesta.Content.ReadAsStringAsync();
                 return saludo;
             }
+        }
+
+        private void loadingGif_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void progressBar1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
