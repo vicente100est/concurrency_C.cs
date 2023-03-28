@@ -33,6 +33,7 @@
             this.loadingGif = new System.Windows.Forms.PictureBox();
             this.txtInput = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.pgProcesamiento = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.loadingGif)).BeginInit();
             this.SuspendLayout();
             // 
@@ -56,6 +57,7 @@
             this.loadingGif.TabIndex = 1;
             this.loadingGif.TabStop = false;
             this.loadingGif.Visible = false;
+            this.loadingGif.Click += new System.EventHandler(this.loadingGif_Click);
             // 
             // txtInput
             // 
@@ -74,11 +76,21 @@
             this.label1.Text = "Nombre";
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
+            // pgProcesamiento
+            // 
+            this.pgProcesamiento.Location = new System.Drawing.Point(15, 241);
+            this.pgProcesamiento.Name = "pgProcesamiento";
+            this.pgProcesamiento.Size = new System.Drawing.Size(147, 23);
+            this.pgProcesamiento.TabIndex = 4;
+            this.pgProcesamiento.Visible = false;
+            this.pgProcesamiento.Click += new System.EventHandler(this.progressBar1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.pgProcesamiento);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtInput);
             this.Controls.Add(this.loadingGif);
@@ -97,6 +109,7 @@
         private System.Windows.Forms.PictureBox loadingGif;
         private System.Windows.Forms.TextBox txtInput;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ProgressBar pgProcesamiento;
     }
 }
 
