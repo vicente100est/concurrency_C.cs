@@ -33,7 +33,7 @@ namespace WinForms
 
             var reportarProgreso = new Progress<int>(ReportarProgresoTarjetas);
 
-            var tarjetas = await ObtenerTarjetasDeCredito(10);
+            var tarjetas = await ObtenerTarjetasDeCredito(200);
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
@@ -63,7 +63,7 @@ namespace WinForms
 
         private async Task ProcesarTarjetas(List<string> tarjetas, IProgress<int> progress = null)
         {
-            var semaforo = new SemaphoreSlim(5);
+            var semaforo = new SemaphoreSlim(30);
 
             var tareas = new List<Task<HttpResponseMessage>>();
 
@@ -78,14 +78,15 @@ namespace WinForms
                 {
                     var tareaInterna =  await _httpClient.PostAsync($"{_apiURL}api/tarjeta", content);
 
-                    if (progress != null)
-                    {
-                        indice++;
-                        var porcentaje = (double)indice / tarjetas.Count;
-                        porcentaje = porcentaje * 100;
-                        var porcentajeInt = (int)Math.Round(porcentaje, 0);
-                        progress.Report(porcentajeInt);
-                    }
+                    //Reportar en un bucle
+                    //if (progress != null)
+                    //{
+                    //    indice++;
+                    //    var porcentaje = (double)indice / tarjetas.Count;
+                    //    porcentaje = porcentaje * 100;
+                    //    var porcentajeInt = (int)Math.Round(porcentaje, 0);
+                    //    progress.Report(porcentajeInt);
+                    //}
 
                     return tareaInterna;
                 }
@@ -95,7 +96,25 @@ namespace WinForms
                 }
             }).ToList();
 
-            var respuestas = await Task.WhenAll(tareas);
+            var respuestasTareas = Task.WhenAll(tareas);
+
+            //Reportar cada x tiempo
+            if (progress != null)
+            {
+                while (await Task.WhenAny(respuestasTareas, Task.Delay(3000)) != respuestasTareas)
+                {
+                    var tareasCompletadas = tareas.Where(x => x.IsCompleted).Count();
+
+                    var porcentaje = (double)tareasCompletadas / tarjetas.Count;
+                    porcentaje = porcentaje * 100;
+                    var porcentajeInt = (int)Math.Round(porcentaje, 0);
+                    progress.Report(porcentajeInt);
+                }
+            }
+
+
+
+            var respuestas = await respuestasTareas;
 
             var tarjetasRechazadas = new List<string>();
 
