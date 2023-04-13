@@ -31,6 +31,8 @@ namespace WinForms
         private async void Iniciar_Click(object sender, EventArgs e)
         {
             _cancellationTokenSource = new CancellationTokenSource();
+            //Crear TimeOut
+            _cancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(30));
             loadingGif.Visible = true;
             pgProcesamiento.Visible = true;
 
@@ -43,7 +45,7 @@ namespace WinForms
             //var nombre = txtInput.Text;
             try
             {
-                var tarjetas = await ObtenerTarjetasDeCredito(200, _cancellationTokenSource.Token);
+                var tarjetas = await ObtenerTarjetasDeCredito(20, _cancellationTokenSource.Token);
                 await ProcesarTarjetas(tarjetas, reportarProgreso, _cancellationTokenSource.Token);
                 //var saludo = await ObtenerSaludo(nombre);
                 //MessageBox.Show(saludo);
@@ -73,7 +75,7 @@ namespace WinForms
             IProgress<int> progress = null,
             CancellationToken cancellationToken = default)
         {
-            var semaforo = new SemaphoreSlim(30);
+            var semaforo = new SemaphoreSlim(2);
 
             var tareas = new List<Task<HttpResponseMessage>>();
 
