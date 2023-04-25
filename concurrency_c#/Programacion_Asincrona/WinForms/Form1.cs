@@ -71,6 +71,15 @@ namespace WinForms
             pgProcesamiento.Value = porcentaje;
         }
 
+        private Task ProcesarTarjetaMock(List<string> tarjetas,
+            IProgress<int> progress = null,
+            CancellationToken cancellationToken = default)
+        {
+            string done = "Do a Task";
+
+            return Task.CompletedTask;
+        }
+
         private async Task ProcesarTarjetas(List<string> tarjetas,
             IProgress<int> progress = null,
             CancellationToken cancellationToken = default)
@@ -185,6 +194,17 @@ namespace WinForms
 
                 return tarjetas;
             });
+        }
+
+        private Task ObtenerErrorConError()
+        {
+            return Task.FromException(new ApplicationException());
+        }
+
+        private Task ObtenerTareaCancelada()
+        {
+            _cancellationTokenSource = new CancellationTokenSource();
+            return Task.FromCanceled(_cancellationTokenSource.Token);
         }
 
         private async Task Esperar()
