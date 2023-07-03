@@ -109,6 +109,7 @@
             this.Controls.Add(this.Iniciar);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.loadingGif)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
