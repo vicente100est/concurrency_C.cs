@@ -36,6 +36,12 @@ namespace WinForms
             loadingGif.Visible = true;
             pgProcesamiento.Visible = true;
 
+            //Contexto de Sincronización
+            //Console.WriteLine($"Hilo antes del await: {Thread.CurrentThread.ManagedThreadId}");
+            //await Task.Delay(500);
+            //Console.WriteLine($"Hilo despues del await: {Thread.CurrentThread.ManagedThreadId}");
+            //await ObtenerSaludo("Belen");
+
             var reportarProgreso = new Progress<int>(ReportarProgresoTarjetas);
 
             var stopwatch = new Stopwatch();
@@ -239,6 +245,11 @@ namespace WinForms
         private void button1_Click(object sender, EventArgs e)
         {
             _cancellationTokenSource?.Cancel();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
