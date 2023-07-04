@@ -27,7 +27,7 @@ namespace WebApi.Controllers
 
             var esperar = RandomGen.NextDouble() * 10 + 1;
             await Task.Delay((int)esperar * 1000);
-
+             
             return $"Hola mi estimado {name}! Espero que estes teniendo un gran dia";
         }
     }
