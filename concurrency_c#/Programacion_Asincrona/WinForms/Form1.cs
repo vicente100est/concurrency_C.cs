@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -35,6 +36,34 @@ namespace WinForms
             _cancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(30));
             loadingGif.Visible = true;
             pgProcesamiento.Visible = true;
+
+            //Patrón de reintento poco culta
+            //var reintentos = 3;
+            //var tiempoEspera = 500;
+
+            //for (int i = 0; i < reintentos; i++)
+            //{
+            //    try
+            //    {
+            //        break;
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        //loguear la excepcion
+            //        await Task.Delay(tiempoEspera);
+            //    }
+            //}
+
+            //Patrón de reintento
+            await Reintentar(async () =>
+            {
+                using (var respuesta = await _httpClient.GetAsync($"{_apiURL}/api/saludar/Belen"))
+                {
+                    respuesta.EnsureSuccessStatusCode();
+                    var contenido = await respuesta.Content.ReadAsStringAsync();
+                    Console.WriteLine(contenido);
+                }
+            });
 
             //Contexto de Sincronización
             //Console.WriteLine($"Hilo antes del await: {Thread.CurrentThread.ManagedThreadId}");
@@ -70,6 +99,24 @@ namespace WinForms
             loadingGif.Visible = false;
             pgProcesamiento.Visible = false;
             pgProcesamiento.Value = 0;
+        }
+
+        //patron de reintento cool
+        private async Task Reintentar (Func<Task> f, int reintentos = 3, int tiempoEspera = 500)
+        {
+            for (int i = 0; i < reintentos; i++)
+            {
+                try
+                {
+                    await f();
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    await Task.Delay(tiempoEspera);
+                }
+            }
         }
 
         private void ReportarProgresoTarjetas(int porcentaje)
