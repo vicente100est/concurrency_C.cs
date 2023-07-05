@@ -16,7 +16,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "Programacion_Asin
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Streams Asincronos", "Streams Asincronos", "{3506A446-1EF8-4A19-B06C-508135D9AD03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Streams Asincronos", "Streams Asincronos\Streams Asincronos.csproj", "{78295B89-2763-43A0-822F-ACF4684728AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Streams Asincronos", "Streams Asincronos\Streams Asincronos.csproj", "{78295B89-2763-43A0-822F-ACF4684728AC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Paralelismo", "Paralelismo", "{6ADB8313-9C8E-470C-A5CA-26A086B6AF84}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
